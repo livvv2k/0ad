@@ -18,7 +18,7 @@
 #include "precompiled.h"
 
 #include "XmppClient.h"
-#include "StanzaExtensions.h"
+#include "lobby/stanzaextensions/StanzaExtensions.h"
 
 #include "i18n/L10n.h"
 #include "lib/utf8.h"

@@ -17,7 +17,7 @@
 #ifndef STANZAEXTENSIONS_H
 #define STANZAEXTENSIONS_H
 
-#include "glooxwrapper/glooxwrapper.h"
+#include "lobby/glooxwrapper/glooxwrapper.h"
 
 #include <vector>
 
