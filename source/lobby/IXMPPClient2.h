@@ -18,56 +18,56 @@
 #ifndef IXMPPCLIENT2_H
 #define IXMPPCLIENT2_H
 
-class XMPPUser {
-private:
-    std::string m_jid;
-    std::string m_username;
-    u16 m_rating;
-    u16 m_gamesPlayed;
-    u16 m_gamesWon;
-    u16 m_gamesLost;
-};
+#include "lobby/glooxwrapper/glooxwrapper.h"
 
-class XMPPGame {
-private:
-    std::string m_hostJID;
-    std::map<std::string, std::string> m_gameData;
-};
+class XMPPGame;
+class XMPPUser;
 
 class IXMPPClient2
 {
 public:
-    virtual IXMPPClient2::~IXMPPClient2() = default;
+	virtual ~IXMPPClient2() = default;
 
-    // Allow unauthenticated
-    virtual bool Login(const std::string& username, const std::string& password) = 0;
-    virtual bool Register(const std::string& username, const std::string& password) = 0;
-    
-    // Requires being authenticated
-    virtual void Logout() = 0;
-    virtual bool ChangePassword(const std::string& newPassword) = 0;
+	struct LobbyServerDetails {
+		std::string m_lobbyServer;
+		std::string m_xpartamupp;
+		std::string m_echelon;
+	};
 
-    // Restrict clients to join only one MUC at a time.
-    virtual bool JoinMUC(const std::string& room) = 0;
-    virtual bool LeaveMUC() = 0;
+	// Allow unauthenticated
+	virtual bool Login(const std::string& username, const std::string& password) = 0;
+	virtual bool Register(const std::string& username, const std::string& password) = 0;
 
-    // Basic XMPP functions
-    virtual bool SendMessage(const std::string& toUsername, const std::string& message) = 0;
-    virtual bool SendMessageToMUC(const std::string& message) = 0;
-    virtual bool SetNick(const std::string& nick) = 0;
-    virtual bool SetPresence(const std::string& status) = 0;
+	// Requires being authenticated
+	virtual void Logout() = 0;
+	virtual bool ChangePassword(const std::string& newPassword) = 0;
 
-    // Member info
-    virtual const XMPPUser& GetUser(const std::string& username) const = 0;
-    virtual const std::list<XMPPUser>& GetUsers() const = 0;
+	// Restrict clients to join only one MUC at a time.
+	virtual bool JoinMUC(const std::string& room) = 0;
+	virtual bool LeaveMUC() = 0;
 
-    // Pyrogenesis functions
-    virtual const std::list<XMPPUser>& GetLeaderboard() const = 0;
-    virtual bool RegisterGame(const XMPPGame&) = 0;
-    virtual bool UnRegisterGame(const XMPPGame&) = 0;
-    virtual bool ReportGame(const XMPPGame&) = 0;
-    virtual const XMPPGame& GetGame(const std::string& hostUsername) const = 0;
-    virtual const std::list<XMPPGame>& GetGames() const = 0;
+	// Basic XMPP functions
+	virtual bool SendMessage(const XMPPUser& toUsername, const std::string& message) = 0;
+	virtual bool SendMessageToMUC(const std::string& message) = 0;
+	virtual bool SetNick(const std::string& nick) = 0;
+	virtual bool SetPresence(const std::string& status) = 0;
+
+	// Member info
+	virtual const XMPPUser& GetUser(const std::string& jid) const = 0;
+	virtual const std::list<XMPPUser>& GetUsers() const = 0;
+	virtual const XMPPUser& GetSelf() const = 0;
+
+	// Pyrogenesis functions
+	virtual const std::list<XMPPUser>& GetLeaderboard() const = 0;
+	virtual bool RegisterGame(const XMPPGame&) = 0;
+	virtual bool UnRegisterGame(const XMPPGame&) = 0;
+	virtual bool ReportGame(const XMPPGame&) = 0;
+	virtual const std::list<XMPPGame>& GetGames() const = 0;
+
+	// Interface for sending out custom stanzas
+	virtual bool SendCustomStanza(const XMPPUser& to, glooxwrapper::StanzaExtension* stanza) = 0;
+
+	virtual const LobbyServerDetails& GetServerDetails() const = 0;
 };
 
 #endif // XMPPCLIENT2_H
